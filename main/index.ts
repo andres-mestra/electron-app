@@ -1,15 +1,11 @@
 import { ipcMain } from 'electron'
 import { ElectronApp } from './ElectronApp'
-
-import { IS_DEV, NODE_ENV, PORT } from './environments'
 import { UpdateService } from './update/index'
+import { IS_DEV, NODE_ENV, PORT } from './environments'
 
 const show = NODE_ENV !== 'test'
-ElectronApp.init({
-  show,
-  dev: IS_DEV,
-  port: PORT,
-})
+
+ElectronApp.init({ show, dev: IS_DEV, port: PORT })
 
 UpdateService(ElectronApp)
 

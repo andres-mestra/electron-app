@@ -12,6 +12,12 @@ type PropsWindow = {
   updateUrl: string
 }
 
+interface ArgsInit {
+  show: boolean
+  dev: boolean
+  port: string
+}
+
 class App {
   height: number
   width: number
@@ -63,18 +69,8 @@ class App {
     })
   }
 
-  init({
-    show,
-    dev,
-    port,
-  }: {
-    show: boolean
-    dev: boolean
-    port: string | number
-  }) {
-    if (require('electron-squirrel-startup')) {
-      this.app.quit()
-    }
+  init({ show, dev, port }: ArgsInit) {
+    if (require('electron-squirrel-startup')) this.app.quit()
 
     this.app.whenReady().then(() => {
       this.createWindow(show)
@@ -95,9 +91,16 @@ class App {
     this.mainWindow.webContents.send(channel, data)
   }
 
+  get platform() {
+    return process.platform === 'linux' ? 'deb' : process.platform
+  }
+
+  get version() {
+    return this.app.getVersion()
+  }
+
   get updateServer() {
-    const platform = process.platform
-    const version = this.app.getVersion()
+    const { platform, version } = this
     const url = `${this.updateUrl}/update/${platform}/${version}`
     return url
   }
