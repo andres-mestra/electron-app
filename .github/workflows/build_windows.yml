@@ -1,0 +1,39 @@
+name: Build Windows
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v4
+      - uses: actions/setup-node@v2
+        with:
+          python-version: '3.x'
+          node-version-file: '.nvmrc'
+      - name: Install windows build-tools
+        run: npm install --global windows-build-tools
+      - name: Install node gyp
+        run: npm install --global node-gyp
+      - name: Install dependencies
+        run: npm ci
+      - name: Rebuild dependencies
+        run: npm run electron:rebuild
+      - name: Configure environment
+        run: |
+          Set-Content './.env-cmdrc.json' '{ "production": { "NODE_ENV": "production"} }'
+          Write-Output "NODE_ENV=production" >> '.env.production'
+          Write-Output "SAFE_LINKS=connect-src 'self'" >> '.env.production'
+      - name: Build application
+        run: npm run make
+      - name: Show installer
+        run: dir ./out/make/squirrel.windows/x64/
+
+
+
