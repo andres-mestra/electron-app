@@ -2,9 +2,8 @@ name: Build Windows
 
 on:
   push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+    tags:
+      - "v*.*.*"
 
 jobs:
   build:
@@ -22,7 +21,7 @@ jobs:
         uses: crazy-max/ghaction-chocolatey@v2
         with:
           args: install visualstudio2017buildtools
-      - name: Configure VStudio with npm
+      - name: Configure visual studio buildtools with npm
         run: npm config set msvs_version 2017
       - name: Install node gyp
         run: npm install --global node-gyp
@@ -40,15 +39,13 @@ jobs:
       - name: Show installer
         run: dir ./out/make/squirrel.windows/x64/
       - name: Create Release
-        uses: xresloader/upload-to-github-release@main
+        uses: softprops/action-gh-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          file: "./out/make/squirrel.windows/x64/*"
-          tags: false
+          files: |
+              ./out/make/squirrel.windows/x64/*
           draft: true
-          branches: "main"
-          verbose: true
 
 
 
