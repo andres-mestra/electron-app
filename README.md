@@ -29,7 +29,19 @@ npm run make
 
 - Create [.env-cmdrc](https://www.npmjs.com/package/env-cmd) file for electron process variables
   ### Define:
-  - NODE_ENV
+  ```json
+  {
+    "dev": {
+      "NODE_ENV": "development"
+    },
+    "test": {
+      "NODE_ENV": "test"
+    },
+    "production": {
+      "NODE_ENV": "production"
+    }
+  }
+  ```
 - Create the files for each execution mode
 
   - .env.development
@@ -42,4 +54,3 @@ npm run make
   - PORT=3000 (only in development)
   - SAFE_LINKS= connect-src 'self' ([Content Security Policy](https://developers.google.com/web/fundamentals/security/csp?utm_source=devtools#source_allowlists))
   - UPDATE_SERVER
-  - VITE_SOME_API_URL
