@@ -2,7 +2,7 @@
   "name": "electron-app",
   "productName": "electron-app",
   "private": true,
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Validation app",
   "main": ".webpack/electron/index.bundle.js",
   "author": {
