@@ -5,6 +5,10 @@ on:
     tags:
       - "v*.*.*"
 
+env:
+  SAFE_LINKS: ${{ secrets.SAFE_LINKS }}
+  UPDATE_SERVER: ${{ secrets.UPDATE_SERVER }}
+
 jobs:
   build_windows:
     runs-on: windows-latest
@@ -31,10 +35,10 @@ jobs:
         run: npm run electron:rebuild
       - name: Configure environment
         run: |
-          Set-Content './.env-cmdrc.json' '{ "production": { "NODE_ENV": "production", "UPDATE_SERVER": ${{ secrets.UPDATE_SERVER }} } }'
+          Set-Content './.env-cmdrc.json' '{ "production": { "NODE_ENV": "production", "UPDATE_SERVER": "$env:UPDATE_SERVER" } }'
           Write-Output "NODE_ENV=production" >> '.env.production'
-          Write-Output "SAFE_LINKS=connect-src 'self'" >> '.env.production'
-          Write-Output "UPDATE_SERVER=${{ secrets.UPDATE_SERVER }}" >> '.env.production'
+          Write-Output "SAFE_LINKS=$env:SAFE_LINKS" >> '.env.production'
+          Write-Output "UPDATE_SERVER=$env:UPDATE_SERVER" >> '.env.production'
           Get-Content './.env-cmdrc.json'
           Get-Content './.env.production'
       - name: Build application
@@ -66,11 +70,11 @@ jobs:
       - name: Configure environment
         run: |
           touch .env-cmdrc
-          echo {\"production\": {\"NODE_ENV\": \"production\", \"UPDATE_SERVER\": ${{ secrets.UPDATE_SERVER }} }} >> .env-cmdrc
+          echo {\"production\": {\"NODE_ENV\": \"production\", \"UPDATE_SERVER\": \"$UPDATE_SERVER\" }} }} >> .env-cmdrc
           touch .env.test
           echo NODE_ENV=production >> .env.production
-          echo SAFE_LINKS=connect-src 'self' >> .env.production
-          echo UPDATE_SERVER=${{ secrets.UPDATE_SERVER }} >> .env.production
+          echo SAFE_LINKS=$UPDATE_SERVER >> .env.production
+          echo UPDATE_SERVER=$UPDATE_SERVER >> .env.production
           cat .env-cmdrc
           cat .env.production
       - name: Build application
