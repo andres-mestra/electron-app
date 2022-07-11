@@ -70,11 +70,12 @@ jobs:
       - name: Configure environment
         run: |
           touch .env-cmdrc.json
-          echo {\"production\": {\"NODE_ENV\": \"production\", \"UPDATE_SERVER\": \"$UPDATE_SERVER\" }} }} >> .env-cmdrc
+          echo {\"production\": {\"NODE_ENV\": \"production\", \"UPDATE_SERVER\": \"$UPDATE_SERVER\" }} }} >> .env-cmdrc.json
           touch .env.production
           echo NODE_ENV=production >> .env.production
           echo SAFE_LINKS=$SAFE_LINKS $UPDATE_SERVER >> .env.production
           echo UPDATE_SERVER=$UPDATE_SERVER >> .env.production
+          ls
           cat .env-cmdrc.json
           cat .env.production
       - name: Build application
