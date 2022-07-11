@@ -31,9 +31,12 @@ jobs:
         run: npm run electron:rebuild
       - name: Configure environment
         run: |
-          Set-Content './.env-cmdrc.json' '{ "production": { "NODE_ENV": "production"} }'
+          Set-Content './.env-cmdrc.json' '{ "production": { "NODE_ENV": "production", "UPDATE_SERVER": ${{ secrets.UPDATE_SERVER }} } }'
           Write-Output "NODE_ENV=production" >> '.env.production'
           Write-Output "SAFE_LINKS=connect-src 'self'" >> '.env.production'
+          Write-Output "UPDATE_SERVER=${{ secrets.UPDATE_SERVER }}" >> '.env.production'
+          Get-Content './.env-cmdrc.json'
+          Get-Content './.env.production'
       - name: Build application
         run: npm run make
       - name: Show installer
@@ -63,10 +66,13 @@ jobs:
       - name: Configure environment
         run: |
           touch .env-cmdrc
-          echo {\"production\": {\"NODE_ENV\": \"production\"}} >> .env-cmdrc
+          echo {\"production\": {\"NODE_ENV\": \"production\", \"UPDATE_SERVER\": ${{ secrets.UPDATE_SERVER }} }} >> .env-cmdrc
           touch .env.test
           echo NODE_ENV=production >> .env.production
           echo SAFE_LINKS=connect-src 'self' >> .env.production
+          echo UPDATE_SERVER=${{ secrets.UPDATE_SERVER }} >> .env.production
+          cat .env-cmdrc
+          cat .env.production
       - name: Build application
         run: npm run make
       - name: Show installer
