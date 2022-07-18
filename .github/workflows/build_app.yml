@@ -21,6 +21,8 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version-file: '.nvmrc'
+          registry-url: 'https://npm.pkg.github.com'
+          scope: '@ticketplushq'
       - name: Chocolatey install visual studio build tools
         uses: crazy-max/ghaction-chocolatey@v2
         with:
@@ -31,6 +33,8 @@ jobs:
         run: npm install --global node-gyp
       - name: Install dependencies
         run: npm ci
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.BOT_PACKAGE_PERSONAL_GITHUB_TOKEN }}
       - name: Rebuild dependencies
         run: npm run electron:rebuild
       - name: Configure environment
@@ -61,8 +65,12 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version-file: '.nvmrc'
+          registry-url: 'https://npm.pkg.github.com'
+          scope: '@ticketplushq'
       - name: Install dependencies
         run: npm ci
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.BOT_PACKAGE_PERSONAL_GITHUB_TOKEN }}
       - name: Rebuild dependencies
         run: npm run electron:rebuild
       - name: Configure environment
