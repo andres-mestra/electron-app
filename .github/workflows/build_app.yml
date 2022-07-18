@@ -8,6 +8,7 @@ on:
 env:
   SAFE_LINKS: ${{ secrets.SAFE_LINKS }}
   UPDATE_SERVER: ${{ secrets.UPDATE_SERVER }}
+  BOT_TOKEN_NPM: ${{ secrets.BOT_PACKAGE_PERSONAL_GITHUB_TOKEN }}
 
 jobs:
   build_windows:
@@ -21,8 +22,6 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version-file: '.nvmrc'
-          registry-url: 'https://npm.pkg.github.com'
-          scope: '@ticketplushq'
       - name: Chocolatey install visual studio build tools
         uses: crazy-max/ghaction-chocolatey@v2
         with:
@@ -31,10 +30,12 @@ jobs:
         run: npm config set msvs_version 2017
       - name: Install node gyp
         run: npm install --global node-gyp
+      - name: Config npmrc
+        run: |
+          Write-Output "@ticketplushq:registry=https://npm.pkg.github.com" >> '.npmrc'
+          Write-Output "//npm.pkg.github.com/:_authToken=$env:BOT_TOKEN_NPM" >> '.npmrc'
       - name: Install dependencies
-        run: npm ci
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: npm install
       - name: Rebuild dependencies
         run: npm run electron:rebuild
       - name: Configure environment
@@ -65,12 +66,13 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version-file: '.nvmrc'
-          registry-url: 'https://npm.pkg.github.com'
-          scope: '@ticketplushq'
+      - name: Config npmrc
+        run: |
+          touch .npmrc
+          echo @ticketplushq:registry=https://npm.pkg.github.com >> .npmrc
+          echo //npm.pkg.github.com/:_authToken=$BOT_TOKEN_NPM >> .npmrc
       - name: Install dependencies
-        run: npm ci
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: npm install
       - name: Rebuild dependencies
         run: npm run electron:rebuild
       - name: Configure environment
