@@ -34,7 +34,7 @@ jobs:
       - name: Install dependencies
         run: npm ci
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.BOT_PACKAGE_PERSONAL_GITHUB_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Rebuild dependencies
         run: npm run electron:rebuild
       - name: Configure environment
@@ -70,7 +70,7 @@ jobs:
       - name: Install dependencies
         run: npm ci
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.BOT_PACKAGE_PERSONAL_GITHUB_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Rebuild dependencies
         run: npm run electron:rebuild
       - name: Configure environment
