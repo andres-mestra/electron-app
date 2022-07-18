@@ -16,20 +16,9 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-python@v4
-        with:
-          python-version-file: '.python-version'
       - uses: actions/setup-node@v2
         with:
           node-version-file: '.nvmrc'
-      - name: Chocolatey install visual studio build tools
-        uses: crazy-max/ghaction-chocolatey@v2
-        with:
-          args: install visualstudio2017buildtools
-      - name: Configure visual studio build tools with npm
-        run: npm config set msvs_version 2017
-      - name: Install node gyp
-        run: npm install --global node-gyp
       - name: Config npmrc
         run: |
           Write-Output "@ticketplushq:registry=https://npm.pkg.github.com" >> '.npmrc'
