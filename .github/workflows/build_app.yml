@@ -2,8 +2,10 @@ name: Build App
 
 on:
   push:
-    tags:
-      - "v*.*.*"
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
 
 env:
   SAFE_LINKS: ${{ secrets.SAFE_LINKS }}
@@ -19,6 +21,8 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version-file: '.nvmrc'
+      - name: Install node gyp
+        run: npm install --global node-gyp
       - name: Config npmrc
         run: |
           Write-Output "@ticketplushq:registry=https://npm.pkg.github.com" >> '.npmrc'
@@ -30,6 +34,7 @@ jobs:
       - name: Configure environment
         run: |
           Set-Content './.env-cmdrc' '{ "production": { "NODE_ENV": "production", "UPDATE_SERVER": "$env:UPDATE_SERVER" } }'
+          Get-Content './.env-cmdrc'
           Write-Output "NODE_ENV=production" >> '.env.production'
           Write-Output "SAFE_LINKS=$env:SAFE_LINKS $env:UPDATE_SERVER" >> '.env.production'
           Write-Output "UPDATE_SERVER=$env:UPDATE_SERVER" >> '.env.production'
