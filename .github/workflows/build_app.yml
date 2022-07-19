@@ -33,8 +33,8 @@ jobs:
         run: npm run electron:rebuild
       - name: Configure environment
         run: |
-          Set-Content './.env-cmdrc' '{ "production": { "NODE_ENV": "production", "UPDATE_SERVER": "$env:UPDATE_SERVER" } }'
-          Get-Content './.env-cmdrc'
+          '{"production": {"NODE_ENV": "production", "UPDATE_SERVER": "'+$env:UPDATE_SERVER+'"}}' | ConvertTo-Json -Compress | ConvertFrom-Json | Out-File './.env-cmdrc.json'
+          Get-Content './.env-cmdrc.json'
           Write-Output "NODE_ENV=production" >> '.env.production'
           Write-Output "SAFE_LINKS=$env:SAFE_LINKS $env:UPDATE_SERVER" >> '.env.production'
           Write-Output "UPDATE_SERVER=$env:UPDATE_SERVER" >> '.env.production'
